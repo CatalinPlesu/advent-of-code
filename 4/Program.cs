@@ -47,11 +47,60 @@ int detectXmasWord(int xRow, int xColumn)
 									{
 										detectedWords += 1;
 									}
-								} else { break; }
+								}
+								else { break; }
 						}
 						else { break; }
 					}
 					else { break; }
+				}
+			}
+		}
+	}
+	return detectedWords;
+}
+
+int detectX_MasWord(int xRow, int xColumn)
+{
+	int detectedWords = 0;
+	int m = 0;
+	int s = 0;
+	for (int i = -1; i <= 1; i++)
+	{
+		for (int j = -1; j <= 1; j++)
+		{
+			if (i != 0 && j != 0)
+			{
+				int checkColumn = xColumn + i;
+				int checkRow = xRow + j;
+				if (checkRow >= 0 && checkRow < lines.Count())
+				{
+					if (checkColumn >= 0 && checkColumn < lines[checkRow].Length)
+					{
+						if (lines[checkRow][checkColumn] == 'M')
+						{
+							m += 1;
+						}
+						else if (lines[checkRow][checkColumn] == 'S')
+						{
+							s += 1;
+						}
+						else { break; }
+
+						if (m == 2 && s == 2 && (lines[xRow - 1][xColumn - 1] == lines[xRow - 1][xColumn + 1] ||
+							lines[xRow - 1][xColumn - 1] == lines[xRow + 1][xColumn - 1]))
+						{
+							return 1;
+						}
+					}
+					else
+					{
+						break;
+					}
+				}
+				else
+				{
+					break;
 				}
 			}
 		}
@@ -64,9 +113,13 @@ for (int i = 0; i < lines.Count(); i++)
 {
 	for (int j = 0; j < lines[i].Length; j++)
 	{
-		if (lines[i][j] == 'X')
+		// if (lines[i][j] == 'X')
+		// {
+		// 	totalWords += detectXmasWord(i, j);
+		// }
+		if (lines[i][j] == 'A')
 		{
-			totalWords += detectXmasWord(i, j);
+			totalWords += detectX_MasWord(i, j);
 		}
 	}
 }
