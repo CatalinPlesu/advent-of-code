@@ -82,6 +82,36 @@ namespace AdventOfCode
 			}
 			return true;
 		}
+
+		public void orderIncorectBatch(ref List<int> batch)
+		{
+			List<int> redFlags = new List<int>();
+			foreach (var page in batch)
+			{
+				if (redFlags.Contains(page))
+				{
+				}
+				else
+				{
+					if (rulesY.ContainsKey(page))
+					{
+						redFlags.AddRange(rulesY[page].ToList());
+					}
+				}
+			}
+			int n = batch.Count();
+			for (int i = 0; i < n - 1; i++)
+				for (int j = 0; j < n - i - 1; j++)
+					if (rulesY.ContainsKey(batch[j]))
+					{
+						if (rulesY[batch[j]].Contains(batch[j + 1]))
+						{
+							var tempVar = batch[j];
+							batch[j] = batch[j + 1];
+							batch[j + 1] = tempVar;
+						}
+					}
+		}
 	}
 
 	public class Updates
@@ -133,6 +163,21 @@ namespace AdventOfCode
 			}
 			return sum;
 		}
+
+		public int correctedMiddlePageSum()
+		{
+			int sum = 0;
+			foreach (var batch in updates)
+			{
+				if (!rules.validateBatch(batch))
+				{
+					var correctedBatch = batch;
+					rules.orderIncorectBatch(ref correctedBatch);
+					sum += correctedBatch[correctedBatch.Count() / 2];
+				}
+			}
+			return sum;
+		}
 	}
 
 	class Program
@@ -151,7 +196,7 @@ namespace AdventOfCode
 
 			Updates updates = new Updates(lines[1], rules);
 			// updates.Print();
-			Console.WriteLine($"Sum: {updates.middlePageSum()}");
+			Console.WriteLine($"Sum: {updates.correctedMiddlePageSum()}");
 		}
 	}
 }
